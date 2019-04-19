@@ -1,0 +1,65 @@
+#include<stdio.h>
+struct process
+{
+char name;
+int AT,BT,CT,WT,TT,priority;
+int processed;
+
+}p[10];
+int n;
+void sortByArrival()
+{
+struct process temp;
+int i,j;
+for(i=0;i<n-1;i++)
+for(j=i+1;j<n;j++)
+{
+if(p[i].AT>p[j].AT)
+{
+temp=p[i];
+p[i]=p[j];
+p[j]=temp;
+}
+}
+}
+
+int main()
+{
+int i,j,time=0,sum_BT=0,largest;
+char c;
+		float avgtt=0;
+        float avgwt=0;
+ printf("Enter no of processes:");
+ scanf("%d",&n);
+ for(i=0,c='A';i<n;i++,c++)
+ {
+ p[i].name=c;
+ printf("\nEnter the Arrival Time, Burst Time, and priority of the process%c: ",p[i].name);
+ scanf("%d%d%d",&p[i].AT,&p[i].BT,&p[i].priority);
+ p[i].processed=0;
+ sum_BT+=p[i].BT;
+ 
+}
+sortByArrival();
+p[9].priority=-9999;
+printf("\nName\tArrival Time\tBurst Time\tPriority\t WT \t TT");
+  for(time=p[0].AT;time<sum_BT;)
+  {
+    largest=9;
+    for(i=0;i<n;i++)
+    {
+      if(p[i].AT<=time && p[i].processed!=1 && p[i].priority>p[largest].priority)
+        largest=i;
+    }
+      time+=p[largest].BT;
+  p[largest].CT=time;
+          p[largest].WT=p[largest].CT-p[largest].AT-p[largest].BT;
+     p[largest].TT=p[largest].CT-p[largest].AT;
+    p[largest].processed=1;
+    avgwt+=p[largest].WT;
+    avgtt+=p[largest].TT;
+printf("\n%c\t\t%d\t\t%d\t\t%d\t%d\t%d",p[largest].name,p[largest].AT,p[largest].BT,p[largest].priority,p[largest].WT,p[largest].TT);
+}
+printf("\nAverage Waiting Time:%f\n",avgwt/n);
+printf("\nAverage Turn Around Time:%f\n",avgtt/n);
+}
